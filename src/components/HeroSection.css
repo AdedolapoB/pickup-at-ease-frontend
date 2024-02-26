@@ -1,0 +1,103 @@
+.hero-section {
+  text-align: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 40px;
+  background: #f9f9f9;
+}
+
+.hero-section h1, .hero-subtitle, .step h2, .step p, .step a {
+  font-family: 'Helvetica Neue', Arial, sans-serif; /* Use a modern, clean font */
+  line-height: 1.4;
+}
+
+.hero-section h1 {
+  font-family: 'Playfair Display', serif; /* Example of a serif font */
+  font-size: 3.5rem;
+  color: #333333; /* Dark gray for less harshness */
+  margin-bottom: 0.5em;
+  letter-spacing: 0.05em;
+}
+
+.hero-subtitle {
+  font-family: 'Open Sans', sans-serif; /* Example of a sans-serif font */
+  font-size: 1.5rem;
+  color: #555555; /* Slightly lighter gray for the subtitle */
+  margin-bottom: 60px;
+}
+.hero-section .decorative-line {
+  display: block;
+  width: 60px;
+  height: 3px;
+  background-color: #0056b3; /* Accent color */
+  margin: 20px auto;
+}
+
+.steps-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.step {
+  width: 250px;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.5s ease;
+  will-change: transform;
+}
+
+@media (hover: hover) {
+  .step:hover {
+    transform: scale(1.05);
+  }
+}
+
+@media (hover: none) {
+  .step:active {
+    transform: scale(1.05);
+  }
+}
+
+.step img {
+  width: 100px;
+  height: auto;
+  margin: 0 auto 20px;
+}
+
+.step h2 {
+  font-size: 1.75rem; /* Increase step title size */
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.step p {
+  font-size: 1.1rem; /* Increase step description size */
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.step a {
+  display: inline-block;
+  background: #0056b3; /* Accent color */
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
+  font-size: 1.1rem; /* Increase link text size */
+}
+
+.step a:hover {
+  background-color: #003d82; /* Darker shade for hover state */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .steps-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

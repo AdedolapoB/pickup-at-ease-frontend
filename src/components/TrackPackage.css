@@ -1,0 +1,72 @@
+.tracking-container {
+  width: 100%; /* Full width of the container */
+  padding: 40px 0; /* More vertical padding */
+  text-align: center;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+              url('../img/trackpacakge.webp') no-repeat center center; /* Adjust the image path as needed */
+  background-size: cover;
+  border-radius: 0; /* Full width elements typically don't have border radius */
+  color: white;
+}
+
+.tracking-container h1 {
+  font-size: 3em; /* Larger font size for headers */
+}
+
+.search-area p {
+  font-size: 1.4em; /* Slightly larger font size for instructions */
+  margin-bottom: 30px; /* More space below the paragraph */
+}
+
+.search-area input {
+  padding: 15px;
+  width: 80%; /* Larger width for the input */
+  max-width: 500px; /* Maximum width to maintain usability */
+  border: 3px solid #00B4D8; /* Thicker border for emphasis */
+  border-radius: 4px;
+  font-size: 1.2em; /* Larger font size for input */
+  margin-bottom: 20px; /* More space below the input */
+  display: block; /* Ensures input is a block element */
+  margin-left: auto; /* Together with margin-right, centers the input */
+  margin-right: auto;
+}
+
+.search-area button {
+  padding: 15px 30px;
+  font-size: 1.2em; /* Larger font size for button */
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: block; /* Block display to fit the width */
+  width: auto; /* Adjusts to content */
+  margin: 0 auto; /* Centers the button */
+}
+
+.recent-searches h2 {
+  margin-top: 40px; /* More space above the recent searches */
+}
+
+.recent-searches ul {
+  list-style-type: none;
+}
+
+.recent-searches li {
+  background-color: #f2f2f2;
+  color: #333;
+  padding: 15px; /* Larger padding for list items */
+  margin-top: 10px;
+  text-align: left;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .tracking-container {
+    padding: 20px; /* Less padding on small screens */
+  }
+
+  .search-area input,
+  .search-area button {
+    width: 90%; /* Full width minus some margin */
+    margin: 10px auto; /* Centers input and button with some space */
+  }
+}

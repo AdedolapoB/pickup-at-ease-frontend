@@ -1,0 +1,44 @@
+.steps-container {
+
+  display: flex;
+  justify-content: space-around;
+  padding: 3rem 0;
+ /* Light text for contrast */
+}
+
+.step {
+  text-align: center;
+  width: 20%; /* Adjust the width as necessary */
+}
+
+.step-icon {
+  width: 80px; /* Adjust size as needed */
+  height: auto;
+  margin-bottom: 1rem;
+
+}
+
+.step h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.step p {
+  font-size: 0.9rem;
+}
+
+@media (max-width: 960px) {
+  .steps-container {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .step {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .step:last-child {
+    margin-bottom: 0;
+  }
+}
