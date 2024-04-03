@@ -1,0 +1,63 @@
+<aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color: #004165;">
+  <!-- Brand Logo -->
+  <style>
+
+      .logo {
+        font-weight: 700; /* Extra bold */
+        font-size: 26px; /* Larger size */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A more distinct font */
+        letter-spacing: 1px; /* Spacing out the letters */
+        color: #00B4D8; /* A color that stands out, light blue */
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Text shadow for depth */
+        cursor: pointer;
+      }
+  </style>
+  <a href="/" class="brand-link">
+   
+      <div class="logo ml-2">PICKUP AT EASE</div>
+  </a>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+          <div class=" ml-3  mr-2">
+              <i class="fas fa-user-circle fa-2x text-white-50"></i>
+          </div>
+          <div class="info">
+              <a href="/logout" class="d-block">
+                  {{ current_user.username }} - Logout
+              </a>
+          </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+              <!-- Add icons to the links using the .nav-icon class
+                   with font-awesome or any other icon font library -->
+              <li class="nav-header">Logistics Services</li>
+              <li class="nav-item">
+                  <a href="/packages" class="nav-link">
+                      <i class="nav-icon fas fa-box-open"></i>
+                      <p>
+                          Packages
+                      </p>
+                  </a>
+              </li>
+
+
+              <li class="nav-item">
+                  <a href="/support" class="nav-link">
+                      <i class="nav-icon fas fa-headset"></i>
+                      <p>
+                          Support/Feedback
+                      </p>
+                  </a>
+              </li>
+          </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+  </div>
+  <!-- /.sidebar -->
+</aside>

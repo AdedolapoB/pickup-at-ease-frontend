@@ -1,0 +1,186 @@
+{% extends "layouts/base_admin.html" %}
+
+{% block title %} Packages {% endblock %} 
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} {% endblock body_class %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/static/assets/plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/static/assets/css/adminlte.min.css">
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Packages</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Packages</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+ <!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header" style="background-color: #004165; color: white;">
+                        <div class="row">
+                            <div class="col">
+                                <h3 class="card-title">Scheduled Packages</h3>
+                            </div>
+                            <div class="col text-right">
+                                <button id="saveChangesBtn" class="btn btn-primary" disabled>Save Changes</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10px">ID</th>
+                                    <th>Description</th>
+                                    <th>Size</th>
+                                    <th>Weight</th>
+                                    <th>Pickup Location</th> 
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if packages %}
+                                    {% for package in packages %}
+                                        <tr>
+                                            <td>{{ package.package_id }}</td>
+                                            <td>{{ package.description }}</td>
+                                            <td>{{ package.size }}</td>
+                                            <td>{{ package.weight }}</td>
+                                            <td>{{ package.pickuploc }}</td>
+                                            <td>
+                                                <select class="form-control status-select" data-package-id="{{ package.package_id }}">
+                                                    <option value="Scheduled" {% if package.status == 'Scheduled' %} selected {% endif %}>Scheduled</option>
+                                                    <option value="Picked up" {% if package.status == 'Picked up' %} selected {% endif %}>Picked up</option>
+                                                    <option value="Out for Delivery" {% if package.status == 'Out for Delivery' %} selected {% endif %}>Out for Delivery</option>
+                                                    <option value="Delivered" {% if package.status == 'Delivered' %} selected {% endif %}>Delivered</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="7" class="text-center">No data to show</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col-md-12 -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const statusSelects = document.querySelectorAll('.status-select');
+        const saveChangesBtn = document.getElementById('saveChangesBtn');
+
+        statusSelects.forEach(select => {
+            select.addEventListener('change', function() {
+                saveChangesBtn.disabled = false;
+            });
+        });
+
+    saveChangesBtn.addEventListener('click', function() {
+        const changedPackages = Array.from(statusSelects).filter(select => select.value !== select.dataset.originalValue);
+        const changedPackageIds = changedPackages.map(select => select.dataset.packageId);
+
+        // Create an object to hold the changed status for each package
+        const packageStatusChanges = {};
+        changedPackages.forEach(select => {
+            const packageId = select.dataset.packageId;
+            const newStatus = select.value;
+            packageStatusChanges[packageId] = newStatus;
+        
+
+        // Send a POST request to the server
+        fetch(`/admin/save/package/${packageId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(packageStatusChanges)
+        })
+        .then(response => {
+            if (response.ok) {
+                // Handle success response
+            } else {
+                // Handle error response
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+
+    location.reload();
+});
+            });
+</script>
+
+  <!-- /.content -->
+
+
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <!-- jQuery -->
+  <script src="/static/assets/plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap 4 -->
+  <script src="/static/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="/static/assets/js/adminlte.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="/static/assets/js/demo.js"></script>
+
+{% endblock javascripts %}

@@ -1,0 +1,348 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Packages {% endblock %} 
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} {% endblock body_class %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/static/assets/plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/static/assets/css/adminlte.min.css">
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Your Packages</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Your Packages</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="background-color: #004165; color: white;">
+                    <div class="row">
+                        <div class="col">
+                            <h3 class="card-title">Scheduled Packages</h3>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#addPackageModal">Add Package</button>
+
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th style="width: 10px">ID</th>
+                                <th>Description</th>
+                                <th>Size</th>
+                                <th>Weight</th>
+                                <th>Pickup Location</th>
+                                <th>Schedule Time</th>
+                                <th>Progress</th>
+                                
+                                <th style="width: 80px">Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if packages %}
+                                {% for package in packages %}
+                                    <tr>
+                                        <td>{{ package.package_id }}</td>
+                                        <td>{{ package.description }}</td>
+                                        <td>{{ package.size }}</td>
+                                        <td>{{ package.weight }}</td>
+                                        <td>{{ package.pickuploc }}</td>
+                                        <td>{{ package.schedule_time }}</td>
+                                        <td>
+                                            {% if package.status == 'Scheduled' %}
+                                            <div class="progress progress-xs">
+                                                <div class="progress-bar bg-yellow" style="width: 25%"></div>
+                                            </div>
+                                            {% elif package.status == 'Picked up' %}
+                                            <div class="progress progress-xs">
+                                                <div class="progress-bar bg-orange" style="width: 50%"></div>
+                                            </div>
+                                            
+                                            {% elif package.status == 'Out for Delivery' %}
+                                            <div class="progress progress-xs">
+                                                <div class="progress-bar bg-green" style="width: 75%"></div>
+                                            </div>
+                                            {% elif package.status == 'Delivered' %}
+                                            <div class="progress progress-xs">
+                                                <div class="progress-bar bg-green" style="width: 100%"></div>
+                                            </div>
+
+                                            {% else %}
+                                            <span class="badge bg-warning">Unknown Status</span>
+                                            {% endif %}
+                                        </td>
+                                        <td><span class="badge bg-{{ package.progress_color }}">{{ package.status }}</span></td>
+                                        <td>
+                                        <form action="/admin/package/delete/{{ package.package_id }}" method="POST">
+                                            <button type="submit" class="btn btn-danger">Unschedule</button>
+                                        </form>
+                                    </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="7" class="text-center">No data to show</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+            
+      <!--  -->
+    </div><!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
+<!-- Modal -->
+<!-- Modal -->
+<div class="modal fade" id="addPackageModal" tabindex="-1" aria-labelledby="addPackageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPackageModalLabel">Add Package</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addPackageForm" action="/packages/create" method="POST">
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" class="form-control" id="description" name="description" placeholder="Enter description">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="size">Size</label>
+                            <input type="text" class="form-control" id="size" name="size" placeholder="Enter size">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="weight">Weight</label>
+                            <input type="text" class="form-control" id="weight" name="weight" placeholder="Enter weight">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="postcode">Postcode</label>
+                            <input type="text" class="form-control" id="postcode" name="postcode" placeholder="Enter postcode">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="city">City</label>
+                            <input type="text" class="form-control" id="city" name="city" placeholder="Enter city">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="pickupLocation">Available Pickup Locations</label>
+                        <select class="form-control" id="pickupLocation" name="pickupLocation">
+                            <!-- Options will be populated dynamically using JavaScript -->
+                        </select>
+                        <input type="hidden" id="pickupLocationId" name="pickupLocationId">
+                    </div>
+                    <div class="form-group">
+                        <label for="scheduleDate">Pickup Date</label>
+                        <input type="date" class="form-control" id="scheduleDate" name="scheduleDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="scheduleTime">Schedule Time</label>
+                        <select class="form-control" id="scheduleTime" name="scheduleTime">
+                            <!-- Options will be populated dynamically using JavaScript -->
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">Submit</button>
+                    <div class="spinner-border text-primary d-none" role="status" id="loadingSpinner">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </form>
+                <div class="alert alert-success mt-3 d-none" id="successMessage" role="alert">
+                    Package added successfully!
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Function to show loading spinner and hide submit button
+    function showLoading() {
+        document.getElementById('submitBtn').classList.add('d-none');
+        document.getElementById('loadingSpinner').classList.remove('d-none');
+    }
+
+    // Function to hide loading spinner and show success message
+    function showSuccessMessage() {
+        document.getElementById('loadingSpinner').classList.add('d-none');
+        document.getElementById('successMessage').classList.remove('d-none');
+    }
+
+    // Submit form using AJAX
+    document.getElementById('addPackageForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+        showLoading(); // Show loading spinner
+
+        // Send AJAX request
+        fetch(this.action, {
+            method: 'POST',
+            body: new FormData(this)
+        })
+        .then(response => {
+            if (response.ok) {
+                showSuccessMessage(); // Show success message if response is successful
+                setTimeout(() => {
+                window.location.reload(); // Reload the page
+            }, 1500);
+        
+            } else {
+                throw new Error('Failed to add package'); // Throw error if response is not successful
+            }
+        })
+        .catch(error => {
+            console.error(error); // Log any errors to the console
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the filtered pickup data from the Flask route
+        const filteredPickup = JSON.parse('{{ filtered_pickup | tojson | safe }}');
+        const pickups = JSON.parse('{{ pickups | tojson | safe }}'); // Serialize pickups variable
+        const pickupLocations = pickups.map(pickup => ({
+            id: pickup.id,
+            address: pickup.address,
+            postcode: pickup.postcode,
+            city: pickup.city
+        }));
+        const selectElement = document.getElementById('pickupLocation');
+        const pickupLocationIdInput = document.getElementById('pickupLocationId'); // Hidden input element
+        console.log(filteredPickup);
+        // Function to populate pickup locations based on filtered data
+        function populatePickupLocations() {
+            const postcodeFilter = document.getElementById('postcode').value.toLowerCase();
+            const cityFilter = document.getElementById('city').value.toLowerCase();
+
+            // Clear previous options
+            selectElement.innerHTML = '';
+            // Clear previous options
+            selectElement.innerHTML = '';
+            const option = document.createElement('option');
+                option.value = "Select a Location";
+                option.textContent = "Select a Location";
+                selectElement.appendChild(option);
+            // Iterate over filtered pickup data
+            for (const [locationId, timeSlots] of Object.entries(filteredPickup)) {
+                // Get the pickup location object
+                const pickupLocation = pickupLocations.find(location => location.id === parseInt(locationId));
+
+                // Check if pickup location matches the filter criteria
+                if (pickupLocation.postcode.toLowerCase().includes(postcodeFilter) &&
+                    pickupLocation.city.toLowerCase().includes(cityFilter)) {
+                    // Create option element
+                    const option = document.createElement('option');
+                    option.value = locationId;
+                    console.log(pickupLocation);
+                    option.textContent = `${pickupLocation.address} (${pickupLocation.city}, ${pickupLocation.postcode})`;
+                    selectElement.appendChild(option);
+                }
+            }
+        }
+
+        // Populate initial pickup locations
+        populatePickupLocations();
+
+        // Event listeners for the postcode and city inputs
+        document.getElementById('postcode').addEventListener('input', populatePickupLocations);
+        document.getElementById('city').addEventListener('input', populatePickupLocations);
+
+        // Function to populate time slots based on selected pickup location
+        function populateTimeSlots(locationId) {
+            const timeSlots = filteredPickup[locationId];
+            const selectElement = document.getElementById('scheduleTime');
+
+            // Clear previous options
+            selectElement.innerHTML = '';
+            const option = document.createElement('option');
+                option.value = "Select a Slot";
+                option.textContent = "Select a Slot";
+                selectElement.appendChild(option);
+            // Populate time slots as options
+            timeSlots.forEach(slot => {
+                const option = document.createElement('option');
+                option.value = slot;
+                option.textContent = slot;
+                selectElement.appendChild(option);
+            });
+        }
+
+        // Event listener for pickup location selection
+        document.getElementById('pickupLocation').addEventListener('change', function() {
+            const selectedLocationId = this.value;
+            populateTimeSlots(selectedLocationId);
+            pickupLocationIdInput.value = selectedLocationId;
+        });
+    });
+</script>
+
+
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <!-- jQuery -->
+  <script src="/static/assets/plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap 4 -->
+  <script src="/static/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="/static/assets/js/adminlte.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="/static/assets/js/demo.js"></script>
+
+{% endblock javascripts %}

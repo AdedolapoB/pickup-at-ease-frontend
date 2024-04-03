@@ -1,0 +1,182 @@
+{% extends "layouts/base_admin.html" %}
+
+{% block title %} Locations {% endblock %} 
+
+<!-- Element injected in the BODY element -->
+{% block body_class %} sidebar-mini {% endblock body_class %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/static/assets/plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/static/assets/css/adminlte.min.css">
+
+{% endblock stylesheets %}
+
+{% block content %}    
+
+  <div class="content-wrapper">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Pick up location</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Pick up</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+    <section class="content">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="card">
+                    <div class="card-header" style="background-color: #004165; color: white;">
+                      <div class="row">
+                          <div class="col">
+                              <h3 class="card-title">All Feedbacks</h3>
+                          </div>
+                          <div class="col text-right"> <!-- Add a column for the button -->
+                              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addPickupModal">
+                                  Add Pickup
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+                      <!-- /.card-header -->
+                      <div class="card-body p-0">
+                          <table class="table table-sm">
+                              <thead>
+                                  <tr>
+                                      <th>ID</th>
+                                      <th>Address</th>
+                                      <th>Postcode</th>
+                                      <th>City</th>
+                                      <th>Slots</th>
+                                      <th>Action</th> <!-- Added Action column -->
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  {% if pickups %}
+                                  {% for location in pickups %}
+                                  <tr>
+                                    <td>{{ location.location_id }}</td>
+                                    <td>{{ location.address }}</td>
+                                    <td>{{ location.postcode }}</td>
+                                    <td>{{ location.city }}</td>
+                                    <td>
+                                        <ul>
+                                            {% for pickup in filtered_pickup[location.location_id] %}
+                                            <li>{{ pickup }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                    <!-- Form with button for each row -->
+                                    <td>
+                                        <form action="/admin/pickup/delete/{{ location.location_id }}" method="POST">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                
+                                  </tr>
+                                  {% endfor %}
+                                  {% else %}
+                                  <tr>
+                                      <td colspan="8" class="text-center">No locations available</td>
+                                  </tr>
+                                  {% endif %}
+                              </tbody>
+                          </table>
+                      </div>
+                      <!-- /.card-body -->
+                  </div>
+              </div>
+          </div>
+      </div><!-- /.container-fluid -->
+  </section>
+    <!-- Modal for pickup creation -->
+<!-- Modal for pickup creation -->
+<div class="modal fade" id="addPickupModal" tabindex="-1" role="dialog" aria-labelledby="addPickupModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addPickupModalLabel">Add Pickup</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="/admin/pickup">
+          <div class="form-group">
+            <label for="pickupAddress">Address</label>
+            <input type="text" class="form-control" id="pickupAddress" name="pickupAddress" placeholder="Enter address">
+          </div>
+          <div class="form-group">
+            <label for="pickupCity">City</label>
+            <input type="text" class="form-control" id="pickupCity" name="pickupCity" placeholder="Enter city">
+          </div>
+          <div class="form-group">
+            <label for="pickupPostcode">Postcode</label>
+            <input type="text" class="form-control" id="pickupPostcode" name="pickupPostcode" placeholder="Enter postcode">
+          </div>
+          <div class="form-group">
+            <label for="pickupTimeSlots">Time Slots</label>
+            <input type="text" class="form-control" id="pickupTimeSlots" name="pickupTimeSlots" placeholder="Enter time slots">
+            <small id="pickupTimeSlotsHelp" class="form-text text-muted">Enter available time slots (e.g., 9:00 AM - 12:00 PM).</small>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save Pickup</button> <!-- Changed to type="submit" to submit the form -->
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- /.content -->
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <!-- jQuery -->
+  <script src="/static/assets/plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap 4 -->
+  <script src="/static/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- bs-custom-file-input -->
+  <script src="/static/assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="/static/assets/js/adminlte.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="/static/assets/js/demo.js"></script>
+  <script>
+  $(function () {
+    bsCustomFileInput.init();
+  });
+  </script>
+
+{% endblock javascripts %}
